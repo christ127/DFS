@@ -1,0 +1,57 @@
+Assigment #4 : DFS (Distributive File System)
+Christian J. Esteves Rivera 
+801-14-2188
+
+This assigment uses a variety of python libraries, sqlite, and the python socket 
+library to simulate a distributive file system. The principal tasks in this assigment 
+were to complete the code in the files meta-data.py, ls.py, copy.py,and the data-node.py. 
+There are other files like the Packet.py and the mds_db.py that have function that are used
+to implement the copy and list functions. The ls.py and copy.py files work as clients that connect
+to the meta-data server and request different commands that I will explain below.
+
+Packet.py:
+
+Contains the class Packet(), that has all of the necessary functions to send 
+information between the clients,the data-nodes and the meta-data server.
+
+mds_db.py
+
+This file contains the functions that are necessary to connect to the database used in this assignment.
+Also there are functions to add information to the database and to ask for information from the database.
+The database contains three tables, the inode table, that has the file name and the file size; the dnode table,
+that has all of the data-nodes registered through the meta-data server; and the blocks table, that stores the 
+blockids of the files that are in the database.
+
+data-node.py
+
+This file connects through sockets with the meta-data server and the copy client to store the data in the data-nodes.
+They are registered through the meta-data server and stored in the database in the dnode table.
+
+ls.py
+
+This file is the implementation of the list client, which communicates with the meta-data server and requests a file list. The meta-data server answers to this request using a mds_db function which executes a query in the database, and
+then the list displays the file list to the client. The list contains the files name and its size.
+
+copy.py
+
+This file is the implementation of the copy client which communicates with the meta-data server and with the data-nodes registered to copy a file to the file system and to copy a file from the file system to a path in the client's computer. The copyToDFS receives a file name, a path, and the address to connect to the meta-data server.The function requests a data-node list to the meta-data server. The meta-data server answers with a list of data-nodes registered. The copy client then connects with the respective data-nodes and starts sending chunks of the file through packets. After the data-nodes recieve the entirety of the file, the data-nodes create a unique block id and send it through packets to the copy client. After the copy receives it, it sends this to the metadata-server and then it is stored in the database. The copyFromDFS receives a fname, a path and the meta-data server address. The copy client sends a request to the meta-data server and the response is the file name with the list of data-nodes were the chunks of the file are located. Then the clients communicates with the data-nodes and they look for the blocks in the path, and it rewrites the file with the new path given.
+							
+
+meta-data.py
+
+The meta-data server handles all of the requests from both of the clients in the file system. These requests usually work with queries to the database. The meta-data server also registers the data-nodes that are available for the clients. 
+
+
+Issues and Discussion:
+
+I discussed the first stages of the assignment with Emmanuel Nieves and Jose Reyes. I had some issues with working with files that were bigger than a 100mb. I think it was because of the way I was chunking the file and sending it through the sockets.
+
+Links:
+
+1. https://docs.python.org/2/library/socketserver.html
+2. https://docs.python.org/2/tutorial/inputoutput.html
+3. https://www.sqlite.org/index.html
+
+
+
+
